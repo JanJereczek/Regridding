@@ -1,7 +1,16 @@
 name = "Regridding"
 authors = ["Jan Swierczek-Jereczek"]
-[compat]
-julia = "1.10.0"
-DrWatson = "2.14.1"
+
 [deps]
+CairoMakie = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
 DrWatson = "634d3b9d-ee7a-5ddf-bec9-22491ea816e1"
+GeoStats = "dcc97b0b-8ce5-5539-9008-bb190f959ef6"
+Interpolations = "a98d9a8b-a2ab-59e6-89dd-64a1c18fca59"
+LazyGrids = "7031d0ef-c40d-4431-b2f8-61a8d2f650db"
+NCDatasets = "85f8d34a-cbdd-5861-8df4-14fed0d494ab"
+Proj = "c94c279d-25a6-4763-9509-64d165bea63e"
+Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
+
+[compat]
+DrWatson = "2.14.1"
+julia = "1.10.0"
