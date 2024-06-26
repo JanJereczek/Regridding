@@ -50,7 +50,7 @@ for j in eachindex(varnames)
     hidedecorations!(ax)
     heatmap!(ax, vars[j])
 end
-fig
+# save("assets/hazzard2024.png", fig)
 
 # Save regridded data
 x_atts = Dict("units" => "m", "long_name" => "x-coordinate")

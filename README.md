@@ -61,6 +61,8 @@ Lat = map(x -> x[2], coords)
 heatmap(μ_new)
 ```
 
+![da igual](assets/hazzard2024-verbose.png)
+
 This code snippet is presents some important drawbacks:
 - it is somewhat verbose,
 - it is not generic,
@@ -137,6 +139,8 @@ var_atts = (μ_ghf_atts, σ_ghf_atts)
 fn = datadir("$filename-regridded.nc")
 save2nc(fn, target_dimnames, target_dims, dim_atts, varnames, vars, var_atts)
 ```
+![da igual](assets/hazzard2024.png)
+
 
 That's it!
 

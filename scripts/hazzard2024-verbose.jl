@@ -21,4 +21,5 @@ Lat = map(x -> x[2], coords)
 
 # Step 4
 μ_new = μ_ghf_itp.(Lon, Lat)
-heatmap(μ_new)
+fig = heatmap(μ_new)
+# save("hazzard2024-verbose.png", fig)
