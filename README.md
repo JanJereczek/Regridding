@@ -86,6 +86,14 @@ That's it! You can then access the results by using the fields defined in `prob`
 
 There are other ways to perform this operation and we here want to briefly outline why we chose to use the one outlined above. `Interpolations.jl` is a performant and well-maintained package that offers a user-friendly treatment of the boundary conditions, which is important when we use lon-lat grids. However, `Interpolations.jl` **requires rectangular grids** as source. This is achieved with the workflow above and could not be done so easily if we would project the `(lon, lat)` vectors to `(x, y)`.
 
+## Resources
+
+The projections of `Proj.jl` are numerous and sometimes a bit cryptic at first glance but a thorough description of them can be found at https://proj.org/en/9.4/operations/projections/index.html.
+
+## Future developments
+
+1. accept delimited files as input with cols = (x, y, ..., data)
+
 ## Conventions
 
 In future, we will try to make `Regridding.jl` as general as possible. For now, we however prefer to define some important conventions that prevent such flexibility but ease the initial development:
