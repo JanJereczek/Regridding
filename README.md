@@ -66,6 +66,7 @@ heatmap(μ_new)
 This code snippet is presents some important drawbacks:
 - it is somewhat verbose,
 - it is not generic,
+- it gets particularly tedious when having various files and/or variables,
 - it does not include a general routine to save the results to a new netCDF file.
 
 This is addressed by the convenience functions implemented in `Regridding`:
