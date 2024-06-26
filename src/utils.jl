@@ -12,16 +12,8 @@ Load dimensions and variables from a netCDF file found at `filepath`, where they
 respectively referred to as `dimnames` and `varnames`.
 """
 function load_data(filepath, dimnames, varnames)
-    ds = Dataset(filepath)
-    dims = Tuple(ds[dimname][:] for dimname in dimnames)
-    if length(dimnames) == 1
-        vars = Tuple(ds[varname][:] for varname in varnames)
-    elseif length(dimnames) == 2
-        vars = Tuple(ds[varname][:, :] for varname in varnames)
-    elseif length(dimnames) == 3
-        vars = Tuple(ds[varname][:, :, :] for varname in varnames)
-    end
-    close(ds)
+    dims = Tuple(ncread(filepath, dimname) for dimname in dimnames)
+    vars = Tuple(ncread(filepath, varname) for varname in varnames)
     return dims, vars
 end
 
