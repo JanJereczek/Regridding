@@ -27,7 +27,7 @@ which activates the project, imports important packages and enables local path h
 
 This repository aims to centralise the julia regridding routines used within the palma-ice group. The internal workflow can be summarized as:
 
-1. Load the source data on the source grid by using `NetCDF` and define an interpolator by using `Interpolations.jl`. We here require the user to have preprocessed their data into a NetCDF file.
+1. Load the source data on the source grid by using `NetCDF.jl` and define an interpolator by using `Interpolations.jl`. We here require the user to have preprocessed their data into a NetCDF file.
 1. Define the target grid. For this we use `LazyGrids.jl`, which is memory-efficient and simple to use.
 2. Compute the associated coordinates on the projection where the source data is defined. For this we use `Proj.jl` which offers a wide range of transformations that can be easily adjusted through keyword arguments.
 3. Pass the target grid to the interpolator.
