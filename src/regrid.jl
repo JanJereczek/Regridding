@@ -1,12 +1,12 @@
 """
     Regrid
-    Regrid(source_file, dimnames, extrapolation_boundary_conditions,
+    Regrid(source_file, source_dimnames, extrapolation_boundary_conditions,
         varnames, source_gridname, target_gridname)
 
 Struct that contains all necessary information for regridding a field from a source grid
 to a target grid. `Regrid` contains the following fields:
 - `source_file`: path to the netCDF file containing the source data
-- `dimnames`: tuple of the names of the dimensions of the source data
+- `source_dimnames`: tuple of the names of the dimensions of the source data
 - `extrapolation_boundary_conditions`: tuple of the boundary conditions for the
     extrapolation of the source data
 - `varnames`: vector of the names of the variables to be regridded
@@ -14,20 +14,20 @@ to a target grid. `Regrid` contains the following fields:
 - `target_gridname`: name of the target grid
 - `source2target`: projection from the source grid to the target grid
 - `target2source`: projection from the target grid to the source grid
-- `dims`: tuple of the dimensions of the source data
+- `source_dims`: tuple of the dimensions of the source data
 - `vars`: vector of the variables to be regridded
 - `interpolators`: vector of the interpolators for the variables to be regridded
 
 # Examples
 
 ```julia
-dimnames = ("lon", "lat")
+source_dimnames = ("lon", "lat")
 extrapolation_boundary_conditions = (Periodic(), Flat())
 varnames = ("z")
 source_file = datadir("BCs/Hazzard-Richards-2024/HR24_GHF_mean.nc")
 source_gridname = "EPSG:4326"
 target_gridname = "+proj=stere +lat_0=-90 +lat_ts=-80"
-r = Regrid(source_file, dimnames, extrapolation_boundary_conditions,
+r = Regrid(source_file, source_dimnames, extrapolation_boundary_conditions,
     varnames, source_gridname, target_gridname)
 ```
 ___________________________________________________________________________________________
@@ -45,42 +45,45 @@ regridded_vars = r((X, Y))
 """
 struct Regrid
     source_file::String
-    dimnames#::NTuple{N, String}
-    extrapolation_boundary_conditions#::NTuple{N, <:Interpolations.BoundaryCondition}
-    varnames::Vector{String}
+    source_dimnames#::NTuple{N, String}
+    target_dimnames#::NTuple{N, String}
     source_gridname::String
     target_gridname::String
     source2target::Proj.Transformation
     target2source::Proj.Transformation
-    dims
+    source_dims
+    varnames#::Vector{String}
     vars
+    extrapolation_boundary_conditions#::NTuple{N, <:Interpolations.BoundaryCondition}
     interpolators
 end
 
 function Regrid(
     source_file,
-    dimnames,
-    extrapolation_boundary_conditions,
-    varnames,
+    source_dimnames,
+    target_dimnames,
     source_gridname,
     target_gridname,
+    varnames,
+    extrapolation_boundary_conditions,
 )
-    sanitycheck_lon_lat(dimnames)
+    sanitycheck_lon_lat(source_dimnames)
     source2target, target2source = get_projections(source_gridname, target_gridname)
-    dims, vars = load_data(source_file, dimnames, varnames)
-    interpolators = [linear_interpolation(dims, var,
+    source_dims, vars = load_data(source_file, source_dimnames, varnames)
+    interpolators = [linear_interpolation(source_dims, var,
         extrapolation_bc = extrapolation_boundary_conditions) for var in vars]
     return Regrid(
         source_file,
-        dimnames,
-        extrapolation_boundary_conditions,
-        varnames,
+        source_dimnames,
+        target_dimnames,
         source_gridname,
         target_gridname,
         source2target,
         target2source,
-        dims,
+        source_dims,
+        varnames,
         vars,
+        extrapolation_boundary_conditions,
         interpolators,
     )
 end
@@ -88,7 +91,7 @@ end
 function (r::Regrid)(target_grid)
     coords = r.target2source.(target_grid...)
     targetgrid_on_sourceprojection = Tuple(extract_dims(coords, i) for i
-        in eachindex(r.dimnames))
+        in eachindex(r.source_dimnames))
     return Tuple(itp.(targetgrid_on_sourceprojection...) for itp in r.interpolators)
 end
 
@@ -101,37 +104,4 @@ function get_projections(source_gridname, target_gridname)
     source2target = Proj.Transformation(source_gridname, target_gridname, always_xy=true)
     target2source = inv(source2target)
     return source2target, target2source
-end
-
-"""
-    save2nc(file, varname, var, dimsnames, dims)
-
-Save a field to a netCDF file.
-"""
-function save2nc(file, varname, var, dimsnames, dims)
-    ds = NCDataset(file, "c")
-    for (name, dim) in zip(dimsnames, dims)
-        println("$name, $dim")
-        defDim(ds, name, length(dim))
-        defVar(ds, name, dim, (name,))
-        ds[name][:] = dim
-    end
-    defVar(ds, varname, var, dimsnames)
-    close(ds)
-end
-
-
-"""
-    regrid(file, var, dimsnames, newdims)
-
-Regrid a field from a netCDF file to a new grid.
-"""
-function regrid(file, var, dimsnames, newdims)
-    ds = NCDataset(file, "r")
-    dims = Tuple(ds[d][:] for d in dimsnames)
-    grid = ndgrid(newdims...)
-    field = readnc(ds, var, dimsnames)
-    close(ds)
-    itp = linear_interpolation(dims, field)
-    return itp.(grid...)
 end
