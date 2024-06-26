@@ -5,7 +5,7 @@ using CairoMakie
 using GeoStats
 using Interpolations
 using LazyGrids
-using NCDatasets
+using NetCDF
 using Unitful
 using Proj
 

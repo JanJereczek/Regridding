@@ -27,7 +27,7 @@ which activates the project, imports important packages and enables local path h
 
 This repository aims to centralise the julia regridding routines used within the palma-ice group. The internal workflow can be summarized as:
 
-1. Load the source data on the source grid by using `NCDatasets` and define an interpolator by using `Interpolations.jl`. We here require the user to have preprocessed their data into a NetCDF file.
+1. Load the source data on the source grid by using `NetCDF` and define an interpolator by using `Interpolations.jl`. We here require the user to have preprocessed their data into a NetCDF file.
 1. Define the target grid. For this we use `LazyGrids.jl`, which is memory-efficient and simple to use.
 2. Compute the associated coordinates on the projection where the source data is defined. For this we use `Proj.jl` which offers a wide range of transformations that can be easily adjusted through keyword arguments.
 3. Pass the target grid to the interpolator.
@@ -35,7 +35,7 @@ This repository aims to centralise the julia regridding routines used within the
 We propose to illustrate this with an example, where the geothermal heat flux data from Hazzard and Richards (2024) is regridded from lon-lat to stereographic:
 
 ```julia
-using CairoMakie, Interpolations, NCDatasets, Proj
+using CairoMakie, Interpolations, Proj
 
 # Step 1
 filepath = datadir("BCs/Hazzard-Richards-2024/HR24_GHF_mean.nc")
@@ -72,7 +72,7 @@ X, Y = ndgrid(x, y)
 
 prob = RegriddingProblem(
     source_file = "BCs/Hazzard-Richards-2024/HR24_GHF_mean.nc",
-    dims = ["x", "y"],
+    source_dims = ["x", "y"],
     vars = ["z"],
     source_gridname = "EPSG:4326",
     target_gridname = "+proj=stere +lat_0=-90 +lat_ts=-80",
