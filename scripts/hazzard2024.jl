@@ -38,8 +38,8 @@ target_dims = (x, y)
 target_grid = ndgrid(target_dims...)
 
 # Filter out missing values and pack into a tuple.
-target_μ = missings2nans(regrid_μ_ghf(target_grid)[1])
-target_σ = missings2nans(regrid_σ_ghf(target_grid)[1])
+target_μ = regrid_μ_ghf(target_grid)[1]
+target_σ = regrid_σ_ghf(target_grid)[1]
 varnames = ("mu_ghf", "sigma_ghf")
 vars = (target_μ, target_σ)
 
