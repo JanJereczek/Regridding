@@ -13,9 +13,31 @@ respectively referred to as `dimnames` and `varnames`.
 """
 function load_data(filepath, dimnames, varnames)
     dims = Tuple(ncread(filepath, dimname) for dimname in dimnames)
-    vars = Tuple(ncread(filepath, varname) for varname in varnames)
+    vars = Tuple(dropped_ncread(filepath, varname) for varname in varnames)
     return dims, vars
 end
+
+function dropped_ncread(filepath, varname)
+    var = ncread(filepath, varname)
+    dimnumbers = Tuple(1:length(size(var)))
+
+    if 1 ∈ size(var)
+        return dropdims(var, dims = Tuple([dimnumbers[i] for i in eachindex(dimnumbers)
+            if size(var, i) == 1]))
+    else
+        return var
+    end
+end
+
+function get_attributes(source_file, varnames, attributes2extract)
+    if isnothing(attributes2extract)
+        return [Dict() for varname in varnames]
+    else
+        return Tuple([Dict(att => ncgetatt(source_file, varname, att) for
+            att in attributes2extract) for varname in varnames])
+    end
+end
+
 
 """
     missings2nans(X::Array{Union{T, Missing}})

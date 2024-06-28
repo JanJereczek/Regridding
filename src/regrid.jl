@@ -56,6 +56,7 @@ struct Regrid
     vars
     extrapolation_boundary_conditions#::NTuple{N, <:Interpolations.BoundaryCondition}
     interpolators
+    attributes
 end
 
 function Regrid(
@@ -65,11 +66,23 @@ function Regrid(
     source_gridname,
     target_gridname,
     varnames,
-    extrapolation_boundary_conditions,
+    extrapolation_boundary_conditions;
+    scale_dims_by = 1,
+    aggregate_vars = nothing,
+    aggregate_dims = nothing,
+    attributes2extract = nothing,
 )
     sanitycheck_lon_lat(source_dimnames)
     source2target, target2source = get_projections(source_gridname, target_gridname)
     source_dims, vars = load_data(source_file, source_dimnames, varnames)
+    attributes = get_attributes(source_file, varnames, attributes2extract)
+
+    source_dims = scale_dims_by .* source_dims
+    if !isnothing(aggregate_vars)
+        vars = aggregate_vars.(vars)
+        source_dims = aggregate_dims(source_dims)
+    end
+    
     interpolators = [linear_interpolation(source_dims, var,
         extrapolation_bc = extrapolation_boundary_conditions) for var in vars]
     return Regrid(
@@ -85,6 +98,7 @@ function Regrid(
         vars,
         extrapolation_boundary_conditions,
         interpolators,
+        attributes,
     )
 end
 
