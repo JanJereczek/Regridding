@@ -1,4 +1,4 @@
-include("intro.jl")
+include("../intro.jl")
 
 # Define regridding config
 source_dimnames = ("lon", "lat")
