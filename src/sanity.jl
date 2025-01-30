@@ -8,7 +8,7 @@ function sanitycheck_lon_lat(dimnames)
         ilon = findfirst(x -> x == "lon", dimnames)
         ilat = findfirst(x -> x == "lat", dimnames)
         if ilat < ilon
-            error("Regridding only accepts (lon, lat) ordering, (lat, lon) not allowed.")
+            error("StructuredRegridding only accepts (lon, lat) ordering, (lat, lon) not allowed.")
         end
     end
 end

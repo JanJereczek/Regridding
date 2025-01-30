@@ -29,7 +29,7 @@ aggregate_dims((x1, x2, x3)) = return(x1, x2, collect(1:12))
 
 i = 2
 # Define mean GHF regridding
-regrid = Regrid(
+regrid = StructuredRegridding(
     filepaths[i],
     source_dimnames,
     target_dimnames,
@@ -42,7 +42,7 @@ regrid = Regrid(
     aggregate_dims = aggregate_dims,
 )
 
-# Regrid
+# Regridding
 x = range(-3040f3, stop = 3040f3, step = 32f3)
 y = copy(x)
 t = collect(1:12)

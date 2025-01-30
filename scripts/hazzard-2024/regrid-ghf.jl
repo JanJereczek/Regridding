@@ -4,13 +4,13 @@ include("../intro.jl")
 source_dimnames = ("lon", "lat")
 target_dimnames = ("xc", "yc")
 varnames = ("z",)
-filename = "BCs/Hazzard-Richards-2024/HR24_GHF"
+filename = datadir("Hazzard-Richards-2024/HR24_GHF")
 source_gridname = "EPSG:4326"
-target_gridname = "+proj=stere +lat_0=-90 +lat_ts=-80"
+target_gridname = "+proj=stere +lat_0=-90 +lat_ts=-71"
 extrapolation_boundary_conditions = (Periodic(), Flat())
 
 # Define mean GHF regridding
-regrid_μ_ghf = Regrid(
+regrid_μ_ghf = StructuredRegridding(
     datadir("$(filename)_mean.nc"),
     source_dimnames,
     target_dimnames,
@@ -21,7 +21,7 @@ regrid_μ_ghf = Regrid(
 )
 
 # Define stddev GHF regridding
-regrid_σ_ghf = Regrid(
+regrid_σ_ghf = StructuredRegridding(
     datadir("$(filename)_std.nc"),
     source_dimnames,
     target_dimnames,
@@ -31,8 +31,9 @@ regrid_σ_ghf = Regrid(
     extrapolation_boundary_conditions,
 )
 
-# Regrid
-x = range(-3040f3, stop = 3040f3, step = 32f3)
+# Regridding
+dx = 32
+x = range(-3040f3, stop = 3040f3, step = dx * 1f3)
 y = copy(x)
 target_dims = (x, y)
 target_grid = ndgrid(target_dims...)
@@ -62,5 +63,5 @@ dim_atts = (x_atts, y_atts)
     "Standard deviation of geothermal heat flux")
 var_atts = (μ_ghf_atts, σ_ghf_atts)
 
-fn = datadir("ANT-32KM_GHF-HR24.nc")
+fn = datadir("ANT-$(dx)KM_GHF-HR24.nc")
 save2nc(fn, target_dimnames, target_dims ./ 1f3, dim_atts, varnames, vars, var_atts)

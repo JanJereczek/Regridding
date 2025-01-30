@@ -10,7 +10,7 @@ target_gridname = "+proj=stere +lat_0=-90 +lat_ts=-80"
 extrapolation_boundary_conditions = (Periodic(), Flat())
 
 # Define mean GHF regridding
-regrid_μ_ghf = Regrid(
+regrid_μ_ghf = StructuredRegridding(
     datadir("$(filename)_mean.nc"),
     source_dimnames,
     target_dimnames,
@@ -21,7 +21,7 @@ regrid_μ_ghf = Regrid(
 )
 
 # Define stddev GHF regridding
-regrid_σ_ghf = Regrid(
+regrid_σ_ghf = StructuredRegridding(
     datadir("$(filename)_std.nc"),
     source_dimnames,
     target_dimnames,
@@ -31,7 +31,7 @@ regrid_σ_ghf = Regrid(
     extrapolation_boundary_conditions,
 )
 
-# Regrid
+# Regridding
 x = range(-3040f3, stop = 3040f3, step = 32f3)
 y = copy(x)
 target_dims = (x, y)

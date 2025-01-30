@@ -15,7 +15,6 @@ for filepath in filepaths
     i2 = findfirst("_", filepath)[1]-1
     push!(varnames, lowercase(filepath[i1:i2]))
 end
-varnames = Tuple(varnames)
 
 # Define regridding config
 source_dimnames = ("rlon", "rlat", "time")
@@ -27,7 +26,7 @@ extrapolation_boundary_conditions = (Flat(), Flat(), Flat())
 aggregate_over_months(X) = cat([mean(X[:, :, i:12:end], dims = 3) for i in 1:12]..., dims = 3)
 aggregate_dims((x1, x2, x3)) = return(x1, x2, collect(1:12))
 
-# Regrid
+# Regridding
 x = range(-3040f3, stop = 3040f3, step = 32f3)
 y = copy(x)
 t = collect(1:12)
@@ -36,7 +35,7 @@ target_grid = ndgrid(target_dims...)
 target_vars = Vector{Array{Float32, 3}}(undef, length(filepaths))
 target_atts = Vector{Dict{String, String}}(undef, length(filepaths))
 for i in eachindex(filepaths)
-    regrid = Regrid(
+    regrid = StructuredRegridding(
         filepaths[i],
         source_dimnames,
         target_dimnames,

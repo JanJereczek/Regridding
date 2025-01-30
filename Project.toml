@@ -3,8 +3,8 @@ authors = ["Jan Swierczek-Jereczek"]
 
 [deps]
 CairoMakie = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
+Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
 DrWatson = "634d3b9d-ee7a-5ddf-bec9-22491ea816e1"
-GeoStats = "dcc97b0b-8ce5-5539-9008-bb190f959ef6"
 Interpolations = "a98d9a8b-a2ab-59e6-89dd-64a1c18fca59"
 LazyGrids = "7031d0ef-c40d-4431-b2f8-61a8d2f650db"
 NetCDF = "30363a11-5582-574a-97bb-aa9a979735b9"

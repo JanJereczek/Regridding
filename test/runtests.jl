@@ -1,5 +1,5 @@
 using DrWatson, Test
-@quickactivate "Regridding"
+@quickactivate "StructuredRegridding"
 
 # Here you include files using `srcdir`
 # include(srcdir("file.jl"))
@@ -8,7 +8,7 @@ using DrWatson, Test
 println("Starting tests")
 ti = time()
 
-@testset "Regridding tests" begin
+@testset "StructuredRegridding tests" begin
     @test 1 == 1
 end
 

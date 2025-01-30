@@ -69,7 +69,7 @@ This code snippet is presents some important drawbacks:
 - it gets particularly tedious when having various files and/or variables,
 - it does not include a general routine to save the results to a new netCDF file.
 
-This is addressed by the convenience functions implemented in `Regridding`:
+This is addressed by the convenience functions implemented in `StructuredRegridding`:
 
 ```julia
 # Load all packages and routines that are needed
@@ -85,7 +85,7 @@ target_gridname = "+proj=stere +lat_0=-90 +lat_ts=-80"
 extrapolation_boundary_conditions = (Periodic(), Flat())
 
 # Define mean GHF regridding
-regrid_μ_ghf = Regrid(
+regrid_μ_ghf = StructuredRegridding(
     datadir("$(filename)_mean.nc"),
     source_dimnames,
     target_dimnames,
@@ -96,7 +96,7 @@ regrid_μ_ghf = Regrid(
 )
 
 # Define stddev GHF regridding
-regrid_σ_ghf = Regrid(
+regrid_σ_ghf = StructuredRegridding(
     datadir("$(filename)_std.nc"),
     source_dimnames,
     target_dimnames,
@@ -106,7 +106,7 @@ regrid_σ_ghf = Regrid(
     extrapolation_boundary_conditions,
 )
 
-# Regrid
+# Regridding
 x = range(-3040f3, stop = 3040f3, step = 32f3)
 y = copy(x)
 target_dims = (x, y)
@@ -157,7 +157,7 @@ The projections of `Proj.jl` are numerous and sometimes a bit cryptic at first g
 
 ## Conventions
 
-In future, we will try to make `Regridding.jl` as general as possible. For now, we however prefer to define some important conventions that prevent such flexibility but ease the initial development:
+In future, we will try to make `StructuredRegridding.jl` as general as possible. For now, we however prefer to define some important conventions that prevent such flexibility but ease the initial development:
 
 1. We **always** use `(lon, lat)` ordering.
 
