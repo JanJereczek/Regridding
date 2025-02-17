@@ -1,5 +1,8 @@
+include("../intro.jl")
 T = Float32
-fn = datadir("ANT-16KM_stdvisc_Hazzard2024.nc")
+dxx = 16
+grid = "ANT-$(dxx)KM"
+fn = datadir("Hazzard-Richards-2024/dst/viscosity/$(grid)_stddev_viscosity_Hazzard2024.nc")
 
 x = ncread(fn, "xc")
 y = ncread(fn, "yc")
@@ -24,7 +27,8 @@ dim_atts = (x_atts, y_atts, z_atts)
 var_atts = (Dict("units" => "log10 Pa s",
     "long_name" => "log10 standard deviation of viscosity"),)
 
-file_out = datadir("ANT-16KM_stdvisc_Hazzard2024_ext.nc")
+file_out = datadir("Hazzard-Richards-2024/dst/viscosity/$(grid)_extended_"*
+    "stddev_viscosity_Hazzard2024.nc")
 isfile(file_out) && rm(file_out)
 save2nc(
     file_out,
