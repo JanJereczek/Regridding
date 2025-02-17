@@ -76,16 +76,17 @@ function StructuredRegridding(
 )
     
     source2target, target2source, source_dims, vars, attributes = init_regridding(
-    source_dimnames,
-    source_gridname,
-    target_gridname,
-    source_file,
-    varnames,
-    attributes2extract,
-    scale_dims_by,
-    aggregate_vars,
-    aggregate_dims,
-)
+        source_dimnames,
+        source_gridname,
+        target_gridname,
+        source_file,
+        varnames,
+        attributes2extract,
+        scale_dims_by,
+        aggregate_vars,
+        aggregate_dims,
+    )
+
     interpolators = [linear_interpolation(Tuple(source_dims), var,
         extrapolation_bc = extrapolation_boundary_conditions) for var in vars]
     return StructuredRegridding(
